@@ -1,13 +1,15 @@
 export default async function handler(req, res) {
-  // Tambahkan headers CORS
-  res.setHeader('Access-Control-Allow-Origin', '*') // Atau ganti dengan domain frontend
+  // --- Tambahkan CORS Header ---
+  res.setHeader('Access-Control-Allow-Origin', '*') // Atau ganti dengan domain kamu
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
+  // --- Tangani Preflight Request ---
   if (req.method === 'OPTIONS') {
-    return res.status(200).end() // Tangani preflight request
+    return res.status(200).end()
   }
 
+  // --- Tangani POST Login ---
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
