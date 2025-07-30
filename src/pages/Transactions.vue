@@ -34,7 +34,7 @@ const loading = ref(true)
 const fetchData = async () => {
   const token = localStorage.getItem('token')
 
-  const res = await fetch('https://e-moneytracker-lmal8wu22-arif-vigos-projects.vercel.app/api/sheets', {
+  const res = await fetch('https://e-moneytracker.vercel.app/api/sheets', {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
