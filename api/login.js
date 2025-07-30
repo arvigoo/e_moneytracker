@@ -6,6 +6,8 @@ export default async function handler(req, res) {
   const { token } = req.body
   const validToken = process.env.AUTH_TOKEN
 
+  console.log('ENV TOKEN:', validToken) // ← Debug log
+
   if (token === validToken) {
     return res.status(200).json({ success: true })
   } else {
