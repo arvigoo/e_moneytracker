@@ -19,14 +19,13 @@ const router = useRouter()
 const handleLogin = async () => {
   error.value = null
   try {
-    const res = await fetch('https://e-moneytracker-lmal8wu22-arif-vigos-projects.vercel.app/api/login', {
+    const res = await fetch('https://e-moneytracker.vercel.app/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ token: token.value })
     })
-
     if (!res.ok) throw new Error('Token salah')
 
     localStorage.setItem('token', token.value)
