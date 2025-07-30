@@ -1,11 +1,8 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col>
-        <h1 class="text-h4 font-weight-bold">Halo, ini dashboard keuanganmu 💸</h1>
-        <v-btn color="error" class="mt-4" @click="logout">Logout</v-btn>
-      </v-col>
-    </v-row>
+    <v-btn color="black" @click="logout">Logout</v-btn>
+    <v-btn color="black" to="/transactions">Lihat Transaksi</v-btn>
+
   </v-container>
 </template>
 
@@ -16,6 +13,7 @@ const router = useRouter()
 
 const logout = () => {
   localStorage.removeItem('token')
+  localStorage.removeItem('user')
   router.push('/login')
 }
 </script>

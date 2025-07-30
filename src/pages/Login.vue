@@ -1,26 +1,10 @@
 <template>
-  <v-container class="fill-height d-flex align-center justify-center">
-    <v-card class="pa-6" max-width="400">
-      <v-card-title class="text-h5 font-weight-bold">Login</v-card-title>
-      <v-card-text>
-        <v-text-field
-          v-model="email"
-          label="Email"
-          prepend-icon="mdi-email"
-          variant="outlined"
-        />
-        <v-text-field
-          v-model="password"
-          label="Password"
-          type="password"
-          prepend-icon="mdi-lock"
-          variant="outlined"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" block @click="login">Login</v-btn>
-      </v-card-actions>
-    </v-card>
+  <v-container>
+    <v-form @submit.prevent="handleLogin">
+      <v-text-field v-model="token" label="Token" outlined required />
+      <v-btn type="submit" color="primary" block>Login</v-btn>
+      <v-alert v-if="error" type="error" class="mt-2">{{ error }}</v-alert>
+    </v-form>
   </v-container>
 </template>
 
@@ -28,36 +12,27 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+const token = ref('')
+const error = ref(null)
 const router = useRouter()
-const email = ref('')
-const password = ref('')
 
-const login = () => {
-  if (!email.value || !password.value) {
-    alert('Email dan password harus diisi.')
-    return
+const handleLogin = async () => {
+  error.value = null
+  try {
+    const res = await fetch('https://e-moneytracker-lmal8wu22-arif-vigos-projects.vercel.app/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ token: token.value })
+    })
+
+    if (!res.ok) throw new Error('Token salah')
+
+    localStorage.setItem('token', token.value)
+    router.push('/dashboard')
+  } catch (err) {
+    error.value = err.message
   }
-
-  // Simulasi login: simpan token dummy
-  const dummyToken = 'token-simulated-123'
-  localStorage.setItem('token', dummyToken)
-
-  // Redirect ke dashboard
-  router.push('/dashboard')
 }
 </script>
-
-<style scoped>
-.v-card {
-  border: 3px solid #ff69b4;
-  border-radius: 20px;
-  box-shadow: 8px 8px 0 #ff1493;
-  background-color: #fff0f5;
-}
-
-.v-btn {
-  font-weight: bold;
-  text-transform: none;
-  box-shadow: 4px 4px 0 #ff1493;
-}
-</style>
