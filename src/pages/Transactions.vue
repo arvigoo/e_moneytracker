@@ -76,13 +76,34 @@ const fetchData = async () => {
     if (!res.ok) throw new Error('Gagal mengambil data transaksi')
 
     const json = await res.json()
-    transactions.value = json.data
+
+    // Ubah array 2D jadi array of object
+    const mapped = json.data.map(row => ({
+      no: row[0],
+      tanggal: row[1],
+      kategori: row[2],
+      pembayaran: row[3],
+      jenis: row[4],
+      pemasukan: row[5],
+      pengeluaran: row[6],
+      jumlah: row[7],
+      catatan: row[8],
+      sumber_dana: row[9],
+      month: row[10],
+      user: row[11] || '-',
+      uuid: row[12] || '-',
+      created_at: row[13] || '-',
+      updated_at: row[14] || '-',
+    }))
+
+    transactions.value = mapped
   } catch (err) {
     error.value = err.message
   } finally {
     loading.value = false
   }
 }
+
 
 onMounted(fetchData)
 </script>
