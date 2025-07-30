@@ -1,6 +1,0 @@
-// {
-//   "routes": [
-//     { "src": "/api/login", "dest": "/api/login.js" },
-//     { "src": "/api/sheets", "dest": "/api/sheets.js" }
-//   ]
-// }
