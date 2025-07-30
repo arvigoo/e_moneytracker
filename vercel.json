@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "api/login.js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/sheets.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "routes": [
+    { "src": "/api/login", "dest": "/api/login.js" },
+    { "src": "/api/sheets", "dest": "/api/sheets.js" }
+  ]
+}
