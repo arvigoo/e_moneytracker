@@ -1,46 +1,44 @@
 <template>
   <v-container>
-    <h2 class="text-h5 font-weight-bold mb-4">📊 Transaksi</h2>
+    <h2 class="text-h5 font-weight-bold mb-4">Daftar Transaksi</h2>
 
     <v-data-table
       :headers="headers"
       :items="transactions"
       :loading="loading"
-      item-value="UUID"
-      show-expand
       class="elevation-4"
+      style="border: 4px solid black; background: pink;"
+      mobile-breakpoint="600"
+      item-value="uuid"
+      show-expand
     >
       <template #top>
         <v-toolbar flat color="pink">
-          <v-toolbar-title class="font-weight-bold text-black">Daftar Transaksi</v-toolbar-title>
-          <v-spacer />
-          <v-progress-circular v-if="loading" indeterminate color="primary" />
+          <v-toolbar-title class="font-weight-bold">Transaksi</v-toolbar-title>
         </v-toolbar>
       </template>
 
-      <!-- Format Jumlah -->
-      <template #item.JUMLAH="{ item }">
-        <span class="font-weight-bold text-blue-darken-3">
-          Rp{{ Number(item.JUMLAH || 0).toLocaleString('id-ID') }}
-        </span>
+      <!-- Row utama -->
+      <template #item.jumlah="{ item }">
+        <strong>Rp {{ Number(item.jumlah).toLocaleString('id-ID') }}</strong>
       </template>
 
-      <!-- Expandable content -->
-      <template #expanded-row="{ columns, item }">
-        <tr>
-          <td :colspan="columns.length">
-            <v-card flat class="pa-4 bg-grey-lighten-4">
-              <p><strong>Jenis:</strong> {{ item.JENIS }}</p>
-              <p><strong>Pemasukan:</strong> Rp{{ Number(item.PEMASUKAN || 0).toLocaleString('id-ID') }}</p>
-              <p><strong>Pengeluaran:</strong> Rp{{ Number(item.PENGELUARAN || 0).toLocaleString('id-ID') }}</p>
-              <p><strong>Catatan:</strong> {{ item.CATATAN }}</p>
-              <p><strong>Sumber Dana:</strong> {{ item['Sumber Dana'] }}</p>
-              <p><strong>User:</strong> {{ item.USER }}</p>
-              <p><strong>Created At:</strong> {{ item.CREATED_AT }}</p>
-              <p><strong>Updated At:</strong> {{ item.UPDATED_AT }}</p>
-            </v-card>
-          </td>
-        </tr>
+      <!-- Row detail (expandable) -->
+      <template #expanded-row="{ item }">
+        <td :colspan="headers.length">
+          <v-card class="ma-2 pa-4" style="border: 2px solid black; background-color: #fff;">
+            <p><strong>Pembayaran:</strong> {{ item.pembayaran }}</p>
+            <p><strong>Jenis:</strong> {{ item.jenis }}</p>
+            <p><strong>Pemasukan:</strong> Rp {{ Number(item.pemasukan || 0).toLocaleString('id-ID') }}</p>
+            <p><strong>Pengeluaran:</strong> Rp {{ Number(item.pengeluaran || 0).toLocaleString('id-ID') }}</p>
+            <p><strong>Catatan:</strong> {{ item.catatan }}</p>
+            <p><strong>Sumber Dana:</strong> {{ item['Sumber Dana'] }}</p>
+            <p><strong>User:</strong> {{ item.user }}</p>
+            <p><strong>UUID:</strong> {{ item.uuid }}</p>
+            <p><strong>Dibuat:</strong> {{ item.created_at }}</p>
+            <p><strong>Diupdate:</strong> {{ item.updated_at }}</p>
+          </v-card>
+        </td>
       </template>
     </v-data-table>
 
@@ -58,10 +56,10 @@ const loading = ref(true)
 const error = ref(null)
 
 const headers = [
-  { text: 'Tanggal', value: 'TANGGAL' },
-  { text: 'Kategori', value: 'KATEGORI' },
-  { text: 'Jumlah', value: 'JUMLAH' },
-  { text: '', value: 'data-table-expand' } // untuk tombol expand
+  { title: 'Tanggal', key: 'tanggal' },
+  { title: 'Kategori', key: 'kategori' },
+  { title: 'Jumlah', key: 'jumlah' },
+  { title: '', key: 'data-table-expand' }, // tombol expand
 ]
 
 const fetchData = async () => {
@@ -70,12 +68,12 @@ const fetchData = async () => {
   try {
     const res = await fetch('https://e-moneytracker.vercel.app/api/sheets', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })
 
-    if (!res.ok) throw new Error('Gagal memuat data')
+    if (!res.ok) throw new Error('Gagal mengambil data transaksi')
 
     const json = await res.json()
     transactions.value = json.data
@@ -88,3 +86,107 @@ const fetchData = async () => {
 
 onMounted(fetchData)
 </script>
+
+
+
+<!-- 
+
+<template>
+  <v-container>
+    <h2 class="text-h5 font-weight-bold mb-4">Daftar Transaksi</h2>
+
+    <v-data-table
+      :headers="headers"
+      :items="transactions"
+      :loading="loading"
+      class="elevation-4"
+      style="border: 4px solid black; background: pink;"
+      mobile-breakpoint="600"
+    >
+      <template #top>
+        <v-toolbar flat color="pink">
+          <v-toolbar-title class="font-weight-bold">Transaksi</v-toolbar-title>
+        </v-toolbar>
+      </template>
+    </v-data-table>
+
+    <v-alert v-if="error" type="error" class="mt-4">
+      {{ error }}
+    </v-alert>
+  </v-container>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const transactions = ref([])
+const loading = ref(true)
+
+const fetchData = async () => {
+  const token = localStorage.getItem('token')
+
+  const res = await fetch('https://e-moneytracker.vercel.app/api/sheets', {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!res.ok) {
+    console.error('Unauthorized or Error')
+    return
+  }
+
+  const json = await res.json()
+  transactions.value = json.data
+  loading.value = false
+}
+
+onMounted(() => {
+  fetchData()
+})
+</script>
+ -->
+
+<!-- 
+<script setup>
+import { onMounted, ref } from 'vue'
+import { API_BASE_URL } from '@/utils/apiBase.js'
+
+
+const loading = ref(true)
+const transactions = ref([])
+const error = ref(null)
+
+const headers = [
+  { text: 'Tanggal', value: 1 },
+  { text: 'Kategori', value: 2 },
+  { text: 'Jenis', value: 4 },
+  { text: 'Pemasukan', value: 5 },
+  { text: 'Pengeluaran', value: 6 },
+  { text: 'Jumlah', value: 7 },
+  { text: 'Catatan', value: 8 },
+]
+
+const fetchData = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/sheets`)
+    const json = await res.json()
+    transactions.value = (json.data || []).map(row => ({
+      1: row[1],
+      2: row[2],
+      4: row[4],
+      5: row[5],
+      6: row[6],
+      7: row[7],
+      8: row[8],
+    }))
+  } catch (err) {
+    error.value = 'Gagal mengambil data transaksi.'
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchData)
+</script> -->
