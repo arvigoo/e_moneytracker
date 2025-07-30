@@ -1,28 +1,22 @@
-// export default async function handler(req, res) {
-//   // Tambahkan header CORS dulu
-//   res.setHeader('Access-Control-Allow-Origin', '*')
-//   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
-//   // Handle preflight request (OPTIONS)
-//   if (req.method === 'OPTIONS') {
-//     return res.status(200).end()
-//   }
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
+  }
 
-//   // Handle POST request
-//   if (req.method !== 'POST') {
-//     return res.status(405).json({ error: 'Method not allowed' })
-//   }
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
 
-//   const { token } = req.body
-//   const validToken = process.env.AUTH_TOKEN
+  const { token } = req.body
+  const validToken = process.env.AUTH_TOKEN
 
-//   if (token === validToken) {
-//     return res.status(200).json({ success: true })
-//   } else {
-//     return res.status(401).json({ error: 'Unauthorized' })
-//   }
-// }
-export default function handler(req, res) {
-  res.status(200).json({ message: 'Login endpoint works!' })
+  if (token === validToken) {
+    return res.status(200).json({ success: true })
+  } else {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
 }
