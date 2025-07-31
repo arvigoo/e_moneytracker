@@ -18,6 +18,12 @@
         </v-toolbar>
       </template>
 
+      <template #item.data-table-expand="{ expand, isExpanded }">
+        <v-icon class="cursor-pointer" @click.stop="expand(!isExpanded)">
+          {{ isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+        </v-icon>
+      </template>
+
       <!-- Row utama -->
       <template #item.jumlah="{ item }">
         <strong>Rp {{ Number(item.jumlah).toLocaleString('id-ID') }}</strong>
