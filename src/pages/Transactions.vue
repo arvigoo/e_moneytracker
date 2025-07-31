@@ -18,16 +18,6 @@
         </v-toolbar>
       </template>
 
-      <!-- Perbaikan tombol expand agar terlihat -->
-      <template #item.data-table-expand="{ expand, isExpanded }">
-        <v-icon
-          class="cursor-pointer"
-          @click="expand(!isExpanded)"
-        >
-          {{ isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
-        </v-icon>
-      </template>
-
       <!-- Row utama -->
       <template #item.jumlah="{ item }">
         <strong>Rp {{ Number(item.jumlah).toLocaleString('id-ID') }}</strong>
@@ -69,7 +59,7 @@ const headers = [
   { title: 'Tanggal', key: 'tanggal' },
   { title: 'Kategori', key: 'kategori' },
   { title: 'Jumlah', key: 'jumlah' },
-  { title: 'EXPAND', key: 'data-table-expand' }, // tombol expand
+  { title: '', key: 'data-table-expand' }, // tombol expand
 ]
 
 const fetchData = async () => {
