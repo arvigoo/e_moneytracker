@@ -59,7 +59,7 @@ const headers = [
   { title: 'Tanggal', key: 'tanggal' },
   { title: 'Kategori', key: 'kategori' },
   { title: 'Jumlah', key: 'jumlah' },
-  { title: '', key: 'data-table-expand' }, // tombol expand
+  { title: 'EXPAND', key: 'data-table-expand' }, // tombol expand
 ]
 
 const fetchData = async () => {
