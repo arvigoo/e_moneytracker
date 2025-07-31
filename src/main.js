@@ -20,7 +20,8 @@ const vuetify = createVuetify({
           surface: '#ffe4ec',
           primary: '#ff69b4',
           secondary: '#ff1493',
-          error: '#ff4d4d'
+          error: '#ff4d4d',
+          'on-surface': '#000000'
         }
       }
     }
